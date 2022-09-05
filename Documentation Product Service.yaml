@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: Product Service
+  description: This is a sample project for the last case study of Springboot, it's working with microservices, Java 11 and it's a service that can help to save information about products, it has options to add coupons to get a discount.
+  version: 1.0.0
+  
+servers:
+- url: http://localhost:8081/api/product
+
+tags:
+- name: post
+  description: This endpoint is for adding a new product.
+- name: getAll
+  description: This endpoint is for getting all the products from DB.
+- name: getProductById
+  description: This endpoint is for getting just one product by the id.
+- name: getDiscount
+  description: This endpoint is for getting a product with a discount for a coupon.
+  
+
+paths:
+  /post:
+    post:
+      tags:
+        - post
+      summary: Insert the information in the DB.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyProductPost'
+        required: true
+      responses:
+        200:
+          description: (OK)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitProduct'
+                
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /getAll:
+    get:
+      tags:
+        - getAll
+      summary: Get the data from the DB.
+      responses:
+        200:
+          description: (OK)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitProduct'
+                
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /getProductById/{id}:
+    get:
+      tags:
+        - getProductById
+      summary: Get the data from the DB by id.
+      parameters:
+      - name: id
+        in: path
+        description: id to get a product
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: (OK)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitProduct'
+                
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /getDiscount:
+    get:
+      tags:
+        - getDiscount
+      summary: Get the data from the DB by id.
+      parameters:
+        - $ref: '#/components/parameters/productId'
+        - name: couponId
+          in: query
+          description: Id to get a coupon
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: (OK)
+          content:
+            application/txt:
+              schema:
+                $ref: '#/components/schemas/ExitDiscount'
+                
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+      
+  
+        
+components:
+  responses:
+    
+    Unauthorized:
+      description: (Unauthorized) No authorization
+    
+    NotFound:
+      description: (NotFound) No info 
+    
+    BadRequest:
+      description: (Bad Request) Incorrect values
+      
+    ServerError:
+      description: Service error
+        
+
+  parameters:
+    productId:
+      in: query
+      name: productId
+      description: Id to get a product
+      required: true
+      schema:
+        type: integer
+        
+  schemas:
+    BodyProductPost:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product.
+        unitPrice:
+          type: integer
+          description: It's the price of a product
+          
+    ExitProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          enum: [1]
+          description: Response
+        name:
+          type: string
+          description: Response
+        unitPrice: 
+          type: integer
+          enum: [80]
+          description: Response
+          
+    ExitDiscount:
+      type: object
+      properties:
+        discount:
+          type: integer
+          enum: [44]
+          description: Response
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        
